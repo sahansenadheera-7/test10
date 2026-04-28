@@ -5,6 +5,9 @@ export default function ItemForm({ onItemAdded }) {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [price, setPrice] = useState('')
+  const [category, setCategory] = useState('vehicle')
+  const [customerReviewCount, setCustomerReviewCount] = useState('')
+  const [imageUrl, setImageUrl] = useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -12,12 +15,18 @@ export default function ItemForm({ onItemAdded }) {
     await createItem({
       name,
       description,
-      price: Number(price)
+      price: Number(price),
+      category,
+      customerReviewCount: customerReviewCount ? Number(customerReviewCount) : 0,
+      imageUrl
     })
 
     setName('')
     setDescription('')
     setPrice('')
+    setCategory('vehicle')
+    setCustomerReviewCount('')
+    setImageUrl('')
     onItemAdded()
   }
 
@@ -38,6 +47,23 @@ export default function ItemForm({ onItemAdded }) {
       <input placeholder="Price" type="number" value={price}
         onChange={e => setPrice(e.target.value)} 
         required/>
+    </div>
+    <div>
+      <select value={category} onChange={e => setCategory(e.target.value)} required>
+        <option value="vehicle">Vehicle</option>
+        <option value="cloths">Cloths</option>
+        <option value="foods">Foods</option>
+        <option value="house">House</option>
+      </select>
+    </div>
+    <div>
+      <input placeholder="Customer Review Count" type="number" value={customerReviewCount}
+        onChange={e => setCustomerReviewCount(e.target.value)} 
+        />
+    </div>
+    <div>
+      <input placeholder="Image URL" value={imageUrl}
+        onChange={e => setImageUrl(e.target.value)} />
     </div>
       <button type="submit">Add Item</button>
     </form>

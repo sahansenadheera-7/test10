@@ -12,9 +12,12 @@ export default function ItemList({ items, onRefresh }) {
 
       {items.map(item => (
         <div key={item._id} style={{ border: '1px solid #ccc', padding: '1rem', marginBottom: '1rem' }}>
+          {item.imageUrl && <img src={item.imageUrl} alt={item.name} style={{ maxWidth: '200px', marginBottom: '1rem' }} />}
           <h3>{item.name}</h3>
           <p>{item.description}</p>
           <p><strong>Price: ${item.price}</strong></p>
+          <p><strong>Category: </strong>{item.category}</p>
+          <p><strong>Customer Reviews: </strong>{item.customerReviewCount}</p>
 
           <button onClick={() => handleDelete(item._id)}>
             Delete
