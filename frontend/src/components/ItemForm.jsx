@@ -1,7 +1,7 @@
-import { useState } from 'react'
-import { createItem } from '../api'
+import { useState, useEffect } from 'react'
+import { createItem, updateItem } from '../api'
 
-export default function ItemForm({ onItemAdded }) {
+export default function ItemForm({ onItemAdded, editingItem, onEditComplete }) {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [price, setPrice] = useState('')
@@ -9,17 +9,40 @@ export default function ItemForm({ onItemAdded }) {
   const [customerReviewCount, setCustomerReviewCount] = useState('')
   const [imageUrl, setImageUrl] = useState('')
 
+  useEffect(() => {
+    if (editingItem) {
+      setName(editingItem.name || '')
+      setDescription(editingItem.description || '')
+      setPrice(editingItem.price || '')
+      setCategory(editingItem.category || 'vehicle')
+      setCustomerReviewCount(editingItem.customerReviewCount || '')
+      setImageUrl(editingItem.imageUrl || '')
+    }
+  }, [editingItem])
+
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    await createItem({
-      name,
-      description,
-      price: Number(price),
-      category,
-      customerReviewCount: customerReviewCount ? Number(customerReviewCount) : 0,
-      imageUrl
-    })
+    if (editingItem) {
+      await updateItem(editingItem._id, {
+        name,
+        description,
+        price: Number(price),
+        category,
+        customerReviewCount: customerReviewCount ? Number(customerReviewCount) : 0,
+        imageUrl
+      })
+      onEditComplete()
+    } else {
+      await createItem({
+        name,
+        description,
+        price: Number(price),
+        category,
+        customerReviewCount: customerReviewCount ? Number(customerReviewCount) : 0,
+        imageUrl
+      })
+    }
 
     setName('')
     setDescription('')
@@ -32,7 +55,7 @@ export default function ItemForm({ onItemAdded }) {
 
   return (
     <form onSubmit={handleSubmit} style={{ marginBottom: '2rem' }}>
-      <h2>Add New Item</h2>
+      <h2>{editingItem ? 'Edit Item' : 'Add New Item'}</h2>
     <div>
       <input placeholder="Item name" value={name}
         onChange={e => setName(e.target.value)} 
@@ -65,7 +88,8 @@ export default function ItemForm({ onItemAdded }) {
       <input placeholder="Image URL" value={imageUrl}
         onChange={e => setImageUrl(e.target.value)} />
     </div>
-      <button type="submit">Add Item</button>
+      <button type="submit">{editingItem ? 'Update Item' : 'Add Item'}</button>
+      {editingItem && <button type="button" onClick={onEditComplete} style={{ marginLeft: '0.5rem' }}>Cancel</button>}
     </form>
   )
 }

@@ -1,6 +1,6 @@
 import { deleteItem } from '../api'
 
-export default function ItemList({ items, onRefresh }) {
+export default function ItemList({ items, onRefresh, onEdit }) {
   const handleDelete = async (id) => {
     await deleteItem(id)
     onRefresh()
@@ -19,6 +19,9 @@ export default function ItemList({ items, onRefresh }) {
           <p><strong>Category: </strong>{item.category}</p>
           <p><strong>Customer Reviews: </strong>{item.customerReviewCount}</p>
 
+          <button onClick={() => onEdit(item)} style={{ marginRight: '0.5rem' }}>
+            Edit
+          </button>
           <button onClick={() => handleDelete(item._id)}>
             Delete
           </button>
