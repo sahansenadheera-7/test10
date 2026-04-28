@@ -5,6 +5,7 @@ import ItemList from './components/ItemList';
 
 function App() {
   const [items, setItems] = useState([]);
+  const [editingItem, setEditingItem] = useState(null);
 
   const fetchItems = async () => {
     const res = await getItems();
@@ -15,11 +16,24 @@ function App() {
     fetchItems();
   }, []);
 
+  const handleEdit = (item) => {
+    setEditingItem(item);
+  };
+
+  const handleEditComplete = () => {
+    setEditingItem(null);
+    fetchItems();
+  };
+
   return (
     <div style={{ maxWidth: '700px', margin: '2rem auto', fontFamily: 'sans-serif' }}>
       <h1>Item Manager</h1>
-      <ItemForm onItemAdded={fetchItems} />
-      <ItemList items={items} onRefresh={fetchItems} />
+      <ItemForm 
+        onItemAdded={fetchItems} 
+        editingItem={editingItem}
+        onEditComplete={handleEditComplete}
+      />
+      <ItemList items={items} onRefresh={fetchItems} onEdit={handleEdit} />
     </div>
   );
 }
