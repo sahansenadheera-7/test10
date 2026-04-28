@@ -17,7 +17,10 @@ router.post('/', async (req, res) => {
   const item = new Item({
     name: req.body.name,
     description: req.body.description,
-    price: req.body.price, // will work once you add price to the model
+    price: req.body.price,
+    category: req.body.category,
+    customerReviewCount: req.body.customerReviewCount,
+    imageUrl: req.body.imageUrl,
   });
   try {
     const newItem = await item.save();
